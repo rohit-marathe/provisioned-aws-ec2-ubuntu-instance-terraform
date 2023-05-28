@@ -6,8 +6,22 @@ provider "aws" {
 resource "aws_security_group" "ubuntu_sg" {
   name_prefix = "ubuntu-sg"
   ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -20,9 +34,10 @@ resource "aws_instance" "ubuntu" {
   key_name      = "devops-2-mumbai"
   vpc_security_group_ids = [aws_security_group.ubuntu_sg.id]
   tags = {
-    Name = "ubuntu-instance"
+    Name = "ubuntu-server"
   }
 }
+
 
 data "aws_ami" "ubuntu" {
   most_recent = true
